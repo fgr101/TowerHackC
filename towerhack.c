@@ -10,6 +10,7 @@
 void ClearScreen();
 void Generate();
 void RollD6();
+void DrawMap();
 
 int D6;
 
@@ -38,51 +39,17 @@ int main () {
 	
 	
 	do {
-			ClearScreen();
-				
-			printf("D6 = %d \n", D6);
-			printf("Xposition = %d \n", XPosition);
-			printf("Tower Level: %d \n", TowerLevel);
 			
-			printf("\n[1] Left [2] Right [3] Go Up [4] Go Down | [7] Exit \n\n");
+		ClearScreen();
+				
+		printf("D6 = %d \n", D6);
+		printf("Xposition = %d \n", XPosition);
+		printf("Tower Level: %d \n", TowerLevel);
 			
-			f = 5;
+		printf("\n[1] Left [2] Right [3] Go Up [4] Go Down | [7] Exit \n\n");
+						
+		DrawMap();
 			
-			do {
-			
-				i = 1;		
-				
-				do {
-								
-					if (i == Stairs[f]) { a1 = '#';} //if (i == Stairs[i] && TowerLevel < f) { a1 = '#';} 
-					else { a1 = '-';}
-								
-					printf (".--%c--.", a1);
-					i++;
-				
-				} while (i < 7);
-
-				printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
-				
-				i = 1;		
-				
-				do {
-								
-					if (i == XPosition && TowerLevel == f) { a1 = 'X';} 
-					else { a1 = ' ';}
-								
-					printf ("|| %c ||", a1);
-					i++;
-				
-				} while (i < 7);
-				
-				printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
-				printf (".-----..-----..-----..-----..-----..-----.\n");
-				
-				f--;
-				
-			} while (f > 0);
-		
 		printf("\nWalk to: ");
 		scanf("%d", &Coordinates);
 		
@@ -124,7 +91,7 @@ int main () {
 		if (XPosition == 0) { XPosition = 1;}
 		if (XPosition == 7) { XPosition = 6;}
 		if (TowerLevel == 0) { TowerLevel = 1;}
-		if (TowerLevel == 6) { TowerLevel = 5;}
+		if (TowerLevel == 11) { TowerLevel = 10;}
 					
 	} while (Coordinates != 7);
 	
@@ -173,5 +140,92 @@ void Generate() {
 	
 	
 	
+}
+
+// Drawing the Tower	
+void DrawMap() {
+	
+	if (TowerLevel <= 5) {
+			
+		f = 5;
+				
+		do {
+				
+			i = 1;		
+					
+			do {
+									
+				if (i == Stairs[f]) { a1 = '#';} //if (i == Stairs[i] && TowerLevel < f) { a1 = '#';} 
+				else { a1 = '-';}
+									
+				printf (".--%c--.", a1);
+				i++;
+					
+			} while (i < 7);
+
+			printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
+					
+			i = 1;		
+					
+			do {
+									
+				if (i == XPosition && TowerLevel == f) { a1 = 'X';} 
+				else { a1 = ' ';}
+									
+				printf ("|| %c ||", a1);
+				i++;
+					
+			} while (i < 7);
+					
+			printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
+			printf (".-----..-----..-----..-----..-----..-----.\n");
+					
+			f--;
+					
+		} while (f > 0);
+			
 	}
+			
+	if (TowerLevel >= 6 && TowerLevel <= 10 ) {
+			
+		f = 10;
+				
+		do {
+				
+			i = 1;		
+					
+			do {
+									
+				if (i == Stairs[f]) { a1 = '#';} //if (i == Stairs[i] && TowerLevel < f) { a1 = '#';} 
+				else { a1 = '-';}
+									
+				printf (".--%c--.", a1);
+				i++;
+					
+			} while (i < 7);
+
+			printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
+					
+			i = 1;		
+					
+			do {
+									
+				if (i == XPosition && TowerLevel == f) { a1 = 'X';} 
+				else { a1 = ' ';}
+									
+				printf ("|| %c ||", a1);
+				i++;
+					
+			} while (i < 7);
+					
+			printf ("\n||   ||||   ||||   ||||   ||||   ||||   ||\n");
+			printf (".-----..-----..-----..-----..-----..-----.\n");
+					
+			f--;
+					
+		} while (f > 5);
+			
+	}	
+	
+}
 
