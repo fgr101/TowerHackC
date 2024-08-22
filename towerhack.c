@@ -2,6 +2,7 @@
 #include <stdlib.h> // Contains the rand() function.
 #include <time.h> // Time and random functions.
 #include <string.h> // library for strings
+#include <windows.h> // for BEEPS and windows functionalities.
 
 #ifdef _WIN32
 #include <windows.h> // Required for Sleep() on Windows 
@@ -11,6 +12,9 @@ void ClearScreen();
 void Generate();
 void RollD6();
 void DrawMap();
+void Battle();
+
+void SoundA();
 
 int D6;
 
@@ -36,7 +40,17 @@ int main () {
 	
 	srand(time(NULL));
 	Generate();
+	Battle();
 	
+	// Function that beeps a sound of frequency 750 for 1.0 sec. The
+	// smallest value for the sound duration is 800, 900 or 1000.
+	
+	// So, the valid range for the `Beep()` function is:
+
+	// - Minimum frequency: 37 Hz
+	// - Maximum frequency: 32767 Hz
+
+	//Beep(500, 970);
 	
 	do {
 			
@@ -70,7 +84,8 @@ int main () {
 					
 					if (XPosition == Stairs[TowerLevel]) {
 						
-						TowerLevel ++; 
+						TowerLevel ++;
+						SoundA();
 					
 					}
 					
@@ -80,7 +95,8 @@ int main () {
 									
 					if (XPosition == Stairs[TowerLevel - 1]) {
 						
-						TowerLevel --; 
+						TowerLevel --;
+						SoundA(); 
 					
 					}
 				
@@ -137,8 +153,6 @@ void Generate() {
 		i++;
 				
 	} while (i < 10);
-	
-	
 	
 }
 
@@ -229,3 +243,26 @@ void DrawMap() {
 	
 }
 
+void Battle(){
+	
+	printf("BATTLE \n");
+	
+	RollD6();
+	int EnemyAttack = D6 + 1;
+	
+	printf ("Enemy: Orc\n");
+	printf ("Attack Pts = %d \n\n", EnemyAttack);
+	
+	scanf("Add number to continue:", &D6);
+	
+	
+	
+	
+	
+
+
+
+}
+
+//Sounds
+void SoundA(){Beep(700, 350);}
