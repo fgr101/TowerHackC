@@ -2,7 +2,7 @@
 #include <stdlib.h> // Contains the rand() function.
 #include <time.h> // Time and random functions.
 #include <string.h> // library for strings
-#include <windows.h> // for BEEPS and windows functionalities.
+#include <windows.h> // for BEEPS, sleep, and windows functionalities.
 
 #ifdef _WIN32
 #include <windows.h> // Required for Sleep() on Windows 
@@ -13,10 +13,15 @@ void Generate();
 void RollD6();
 void DrawMap();
 void Battle();
+void PrintD6();
 
 void SoundA();
 
 int D6;
+int EndBattle;
+
+int XPCounter;
+int XP;
 
 int TowerLevel = 1;
 int Coordinates = 0;
@@ -40,7 +45,6 @@ int main () {
 	
 	srand(time(NULL));
 	Generate();
-	Battle();
 	
 	// Function that beeps a sound of frequency 750 for 1.0 sec. The
 	// smallest value for the sound duration is 800, 900 or 1000.
@@ -55,7 +59,10 @@ int main () {
 	do {
 			
 		ClearScreen();
-				
+		Battle();
+		
+		printf("XPCounter = %d \n", XPCounter);
+		printf("XP = %d \n", XP);			
 		printf("D6 = %d \n", D6);
 		printf("Xposition = %d \n", XPosition);
 		printf("Tower Level: %d \n", TowerLevel);
@@ -245,24 +252,125 @@ void DrawMap() {
 
 void Battle(){
 	
-	printf("BATTLE \n");
+	EndBattle = 0;
 	
-	RollD6();
-	int EnemyAttack = D6 + 1;
-	
-	printf ("Enemy: Orc\n");
-	printf ("Attack Pts = %d \n\n", EnemyAttack);
-	
-	scanf("Add number to continue:", &D6);
-	
-	
-	
-	
-	
+	printf("\n\nBATTLE! YOU FOUND AN ENEMY!\n");
+	printf ("===========================\n");
+		
+	do {
+		
+		printf ("\nENEMY ROLLING D6...\n");
+		Sleep(1000);
 
+		RollD6();
+		PrintD6();
+		
+		int EnemyAttack = D6 + 1;
+		
+		printf ("Enemy: Orc [D6 +1]\n");
+		printf ("Enemy Attack Pts = %d \n\n", EnemyAttack);
+		
+		//scanf("Add number to continue:", &Option);
 
-
+				
+		printf ("PLAYER ROLLING D6...\n");
+		Sleep(1000);
+		
+		RollD6();
+		PrintD6();
+						
+		int PlayerAttack = D6 + XP;
+		
+		printf ("Player: Player [D6 + XP]\n");
+		printf ("Player Attack Pts = %d \n\n", PlayerAttack);
+				
+		if (PlayerAttack > EnemyAttack) {
+			
+			printf("YOU WIN!\n");
+			printf("XP points +1!\n\n");
+			
+			XPCounter ++;
+			if (XPCounter == 3) {XP++; XPCounter = 0;}
+			EndBattle = 1;
+			Sleep(1000);
+				
+		} else { printf("The ENEMY HITS YOU!\n");}
+		
+		//scanf("Add number 1 to continue:", &Option);
+		Sleep(1000);
+			
+	} while (EndBattle != 1);
 }
 
 //Sounds
 void SoundA(){Beep(700, 350);}
+
+void PrintD6() {
+
+	switch (D6) {
+		
+		case 1:   	
+	
+			printf("\n-----\n");
+			printf("|   |\n");
+			printf("| o |\n");
+			printf("|   |\n");
+			printf("-----\n");
+			
+			break;
+	
+		case 2:   	
+	
+			printf("\n-----\n");
+			printf("| o |\n");
+			printf("|   |\n");
+			printf("| o |\n");
+			printf("-----\n");
+			
+			break;
+			
+		case 3:
+		
+			printf("\n-----\n");
+			printf("| o |\n");
+			printf("| o |\n");
+			printf("| o |\n");
+			printf("-----\n");
+			
+			break;
+			
+		case 4:
+		
+			printf("\n-----\n");
+			printf("|o o|\n");
+			printf("|   |\n");
+			printf("|o o|\n");
+			printf("-----\n");
+			
+			break;
+			
+		case 5:
+		
+			printf("\n-----\n");
+			printf("|o o|\n");
+			printf("| o |\n");
+			printf("|o o|\n");
+			printf("-----\n");
+			
+			break;
+			
+		case 6:
+		
+			printf("\n-----\n");
+			printf("|o o|\n");
+			printf("|o o|\n");
+			printf("|o o|\n");
+			printf("-----\n");
+			
+			break;
+			
+	}
+	
+	printf("\n");
+
+}
