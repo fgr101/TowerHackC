@@ -14,12 +14,17 @@ void RollD6();
 void DrawMap();
 void Battle();
 void PrintD6();
+void RollEvent();
+void GameOver();
 
 void SoundA();
 
 int D6;
+int EnemyNumber;
+int EnemyAttack;
 int EndBattle;
 
+int PlayerHP = 20;
 int XPCounter;
 int XP;
 
@@ -57,10 +62,11 @@ int main () {
 	//Beep(500, 970);
 	
 	do {
-			
-		ClearScreen();
-		Battle();
-		
+
+		ClearScreen();		
+		if (PlayerHP <= 0) {return 0;}
+						
+		printf("PlayerHP = %d \n", PlayerHP);
 		printf("XPCounter = %d \n", XPCounter);
 		printf("XP = %d \n", XP);			
 		printf("D6 = %d \n", D6);
@@ -70,6 +76,7 @@ int main () {
 		printf("\n[1] Left [2] Right [3] Go Up [4] Go Down | [7] Exit \n\n");
 						
 		DrawMap();
+		RollEvent();
 			
 		printf("\nWalk to: ");
 		scanf("%d", &Coordinates);
@@ -115,7 +122,7 @@ int main () {
 		if (XPosition == 7) { XPosition = 6;}
 		if (TowerLevel == 0) { TowerLevel = 1;}
 		if (TowerLevel == 11) { TowerLevel = 10;}
-					
+									
 	} while (Coordinates != 7);
 	
 	return 0;
@@ -253,7 +260,7 @@ void DrawMap() {
 void Battle(){
 	
 	EndBattle = 0;
-	
+		
 	printf("\n\nBATTLE! YOU FOUND AN ENEMY!\n");
 	printf ("===========================\n");
 		
@@ -265,13 +272,69 @@ void Battle(){
 		RollD6();
 		PrintD6();
 		
-		int EnemyAttack = D6 + 1;
+		switch (EnemyNumber) {
+			
+			case 1: //Orc
 		
-		printf ("Enemy: Orc [D6 +1]\n");
+				EnemyAttack = D6;
+				break;
+				
+			case 2: //Wolf
+		
+				EnemyAttack = D6 + 1;
+				break;
+			
+			case 3: //Skeleton
+		
+				EnemyAttack = D6 + 2;
+				break;
+				
+			case 4: //EvilWarrior
+		
+				EnemyAttack = D6 + 3;
+				break;
+			
+			case 5: //DevilBat
+		
+				EnemyAttack = D6 + 4;
+				break;
+				
+			case 6: //Cyclops
+		
+				EnemyAttack = D6 + 5;
+				break;
+				
+			case 7: //Dark Elf
+		
+				EnemyAttack = D6 + 6;
+				break;
+				
+			case 8: //Skeleton Lord
+		
+				EnemyAttack = D6 + 7;
+				break;
+				
+			case 9: //Wizard
+		
+				EnemyAttack = D6 + 8;
+				break;
+				
+			case 10: //Demon
+		
+				EnemyAttack = D6 + 9;
+				break;
+				
+			case 11: //BBEG
+		
+				EnemyAttack = D6 + 10;
+				break;
+		
+		}
+		
+		printf ("Enemy: *** [D6 +%d]\n", (EnemyNumber - 1));
 		printf ("Enemy Attack Pts = %d \n\n", EnemyAttack);
 		
 		//scanf("Add number to continue:", &Option);
-
 				
 		printf ("PLAYER ROLLING D6...\n");
 		Sleep(1000);
@@ -281,6 +344,7 @@ void Battle(){
 						
 		int PlayerAttack = D6 + XP;
 		
+		printf ("HP: %d \n", PlayerHP);
 		printf ("Player: Player [D6 + XP]\n");
 		printf ("Player Attack Pts = %d \n\n", PlayerAttack);
 				
@@ -294,7 +358,12 @@ void Battle(){
 			EndBattle = 1;
 			Sleep(1000);
 				
-		} else { printf("The ENEMY HITS YOU!\n");}
+		} else {
+			
+				printf("The ENEMY HITS YOU!\n"); PlayerHP --;
+				if (PlayerHP <= 0) {GameOver(); return;}
+		
+			}
 		
 		//scanf("Add number 1 to continue:", &Option);
 		Sleep(1000);
@@ -306,12 +375,14 @@ void Battle(){
 void SoundA(){Beep(700, 350);}
 
 void PrintD6() {
-
+	
+	printf("\n");
+	
 	switch (D6) {
 		
 		case 1:   	
 	
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("|   |\n");
 			printf("| o |\n");
 			printf("|   |\n");
@@ -321,7 +392,7 @@ void PrintD6() {
 	
 		case 2:   	
 	
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("| o |\n");
 			printf("|   |\n");
 			printf("| o |\n");
@@ -331,7 +402,7 @@ void PrintD6() {
 			
 		case 3:
 		
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("| o |\n");
 			printf("| o |\n");
 			printf("| o |\n");
@@ -341,7 +412,7 @@ void PrintD6() {
 			
 		case 4:
 		
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("|o o|\n");
 			printf("|   |\n");
 			printf("|o o|\n");
@@ -351,7 +422,7 @@ void PrintD6() {
 			
 		case 5:
 		
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("|o o|\n");
 			printf("| o |\n");
 			printf("|o o|\n");
@@ -361,7 +432,7 @@ void PrintD6() {
 			
 		case 6:
 		
-			printf("\n-----\n");
+			printf("-----\n");
 			printf("|o o|\n");
 			printf("|o o|\n");
 			printf("|o o|\n");
@@ -373,4 +444,52 @@ void PrintD6() {
 	
 	printf("\n");
 
+}
+
+
+void RollEvent() {
+	
+	RollD6();
+	PrintD6();
+	
+	switch (D6) {
+		
+		case 1:
+		
+			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			break;
+			
+		case 2:
+		
+			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			break;
+				
+		case 3:
+		
+			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			break;
+		
+		case 4:		
+		
+			if (TowerLevel == 1) {}
+			break;
+		
+		case 5:
+		
+			if (TowerLevel == 1) {}
+			break;
+		
+		case 6:
+		
+			if (TowerLevel == 1) {}
+			break;
+	
+	}
+
+}
+
+void GameOver() {
+
+		printf("\n GAME OVER \n");
+	
 }
