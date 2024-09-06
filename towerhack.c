@@ -15,6 +15,10 @@ void DrawMap();
 void Battle();
 void PrintD6();
 void RollEvent();
+void UsePotion();
+
+void EmptyRoom();
+void PotionFound();
 void GameOver();
 
 void SoundA();
@@ -25,6 +29,7 @@ int EnemyAttack;
 int EndBattle;
 
 int PlayerHP = 20;
+int Potions;
 int XPCounter;
 int XP;
 
@@ -65,18 +70,8 @@ int main () {
 
 		ClearScreen();		
 		if (PlayerHP <= 0) {return 0;}
-						
-		printf("PlayerHP = %d \n", PlayerHP);
-		printf("XPCounter = %d \n", XPCounter);
-		printf("XP = %d \n", XP);			
-		printf("D6 = %d \n", D6);
-		printf("Xposition = %d \n", XPosition);
-		printf("Tower Level: %d \n", TowerLevel);
-			
-		printf("\n[1] Left [2] Right [3] Go Up [4] Go Down | [7] Exit \n\n");
-						
+
 		DrawMap();
-		RollEvent();
 			
 		printf("\nWalk to: ");
 		scanf("%d", &Coordinates);
@@ -116,12 +111,32 @@ int main () {
 				
 					break;
 					
+				case 7: 
+				
+					return 0;
+					break;
+					
+				case 11:
+				
+					UsePotion();
+					break;
+					
 			}
 			
 		if (XPosition == 0) { XPosition = 1;}
 		if (XPosition == 7) { XPosition = 6;}
 		if (TowerLevel == 0) { TowerLevel = 1;}
 		if (TowerLevel == 11) { TowerLevel = 10;}
+		
+		if (Coordinates != 11) {
+			
+			ClearScreen();
+			DrawMap();
+			printf("\nWalk to: %d \n\n", Coordinates);
+			Sleep(1000);
+			RollEvent();
+		
+		}
 									
 	} while (Coordinates != 7);
 	
@@ -172,6 +187,11 @@ void Generate() {
 
 // Drawing the Tower	
 void DrawMap() {
+	
+	printf("PlayerHP = %d | XPCounter = %d | XP = %d | D6 = %d | Xposition = %d | \n", PlayerHP, XPCounter, XP, D6, XPosition);
+	printf("Tower Level: %d | Potions: %d \n", TowerLevel, Potions);
+		
+	printf("\n[1] Left [2] Right [3] Go Up [4] Go Down | [11] Use Potion [7] Exit \n\n");
 	
 	if (TowerLevel <= 5) {
 			
@@ -261,12 +281,16 @@ void Battle(){
 	
 	EndBattle = 0;
 		
-	printf("\n\nBATTLE! YOU FOUND AN ENEMY!\n");
-	printf ("===========================\n");
-		
+	printf("\nBattle! You found an enemy!\n");
+	
+	
+	Sleep(1000);
+	
+	ClearScreen();
+	
 	do {
 		
-		printf ("\nENEMY ROLLING D6...\n");
+		printf ("\n[D6] ENEMY ROLLING D6...\n");
 		Sleep(1000);
 
 		RollD6();
@@ -336,7 +360,7 @@ void Battle(){
 		
 		//scanf("Add number to continue:", &Option);
 				
-		printf ("PLAYER ROLLING D6...\n");
+		printf ("[D6] PLAYER ROLLING D6...\n");
 		Sleep(1000);
 		
 		RollD6();
@@ -449,8 +473,11 @@ void PrintD6() {
 
 void RollEvent() {
 	
+	printf ("[D6] ROLLING EVENT...\n");
+	Sleep(1000);
 	RollD6();
 	PrintD6();
+	Sleep(1000);
 	
 	switch (D6) {
 		
@@ -471,12 +498,14 @@ void RollEvent() {
 		
 		case 4:		
 		
-			if (TowerLevel == 1) {}
+			if (TowerLevel == 1 || TowerLevel == 3) {PotionFound();}
 			break;
 		
 		case 5:
 		
-			if (TowerLevel == 1) {}
+			if (TowerLevel == 1 || TowerLevel == 2 || TowerLevel == 3 || TowerLevel == 4) {EmptyRoom(); }
+			if (TowerLevel == 5  || TowerLevel == 7 || TowerLevel == 8 || TowerLevel == 10) {EmptyRoom(); }
+			if (TowerLevel == 6 || TowerLevel == 9) {PotionFound();}
 			break;
 		
 		case 6:
@@ -492,4 +521,40 @@ void GameOver() {
 
 		printf("\n GAME OVER \n");
 	
+}
+
+void EmptyRoom() {
+	
+	printf ("The room is empty.\n");
+	Sleep(1000);
+	
+}
+
+void PotionFound() {
+	
+	printf("You have found a potion!\n");
+	Potions++;
+	Sleep(1000);
+	
+}
+
+void UsePotion() {
+	
+	if (Potions > 0 && PlayerHP < 20) {
+
+		Potions --;
+		PlayerHP ++;
+		
+		printf ("One potion has been used! +1 HP restored!");
+		
+
+	} else { 
+		
+		if (!Potions > 0) {printf ("You don't have any potions!");}
+		if (Potions > 0 && !PlayerHP <= 20) {printf ("You are at maximum HP!");}
+		
+	}
+	
+	Sleep(1000);
+
 }
