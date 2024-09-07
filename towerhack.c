@@ -19,6 +19,7 @@ void UsePotion();
 
 void EmptyRoom();
 void PotionFound();
+void GetXP();
 void GameOver();
 
 void SoundA();
@@ -84,13 +85,12 @@ int main () {
 					break;
 					
 				case 2:
-				
+					
 					XPosition = XPosition + 1;
 					break;
 					
 				case 3:
 				
-					
 					if (XPosition == Stairs[TowerLevel]) {
 						
 						TowerLevel ++;
@@ -101,7 +101,7 @@ int main () {
 					break;
 				
 				case 4:
-									
+					
 					if (XPosition == Stairs[TowerLevel - 1]) {
 						
 						TowerLevel --;
@@ -132,7 +132,34 @@ int main () {
 			
 			ClearScreen();
 			DrawMap();
-			printf("\nWalk to: %d \n\n", Coordinates);
+			printf("\nWalk to: %d \n", Coordinates);
+			
+			switch(Coordinates) {
+				
+				case 1:
+
+					printf("Going east...");
+					break;
+				
+				case 2:
+					
+					printf("Going west...");
+					break;
+				
+				case 3:
+					
+					printf("Going upstairs...");
+					break;
+				
+				case 4:
+					
+					printf("Going downstairs...");
+					break;
+				
+			}
+			
+			printf("\n\n");
+						
 			Sleep(1000);
 			RollEvent();
 		
@@ -510,7 +537,7 @@ void RollEvent() {
 		
 		case 6:
 		
-			if (TowerLevel == 1) {}
+			GetXP();
 			break;
 	
 	}
@@ -557,4 +584,25 @@ void UsePotion() {
 	
 	Sleep(1000);
 
+}
+
+void GetXP() {
+	
+	if (XP <= 10) {
+	
+		XPCounter ++;
+		printf("You feel much stronger! You get +1 XP counter!");
+		
+		if (XPCounter == 3) {XP++; XPCounter = 0;}
+		if (XP > 10) {XP = 10;} 
+	
+	} else { 
+		
+		printf("You are at maximum XP! You've reached the limit!\n"); 
+		printf("You can't get anymore stronger!");
+		
+		}
+			
+	Sleep(1000);
+				
 }
