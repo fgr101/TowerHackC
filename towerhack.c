@@ -24,6 +24,9 @@ void GameOver();
 
 void SoundA();
 
+char EnemyName[15];
+int EnemyID;
+
 int D6;
 int EnemyNumber;
 int EnemyAttack;
@@ -307,10 +310,9 @@ void DrawMap() {
 void Battle(){
 	
 	EndBattle = 0;
-		
+	
 	printf("\nBattle! You found an enemy!\n");
-	
-	
+		
 	Sleep(1000);
 	
 	ClearScreen();
@@ -326,63 +328,74 @@ void Battle(){
 		switch (EnemyNumber) {
 			
 			case 1: //Orc
-		
+				
+				strcpy(EnemyName, "Orc");
 				EnemyAttack = D6;
 				break;
 				
 			case 2: //Wolf
-		
+				
+				strcpy(EnemyName, "Wolf");
 				EnemyAttack = D6 + 1;
 				break;
 			
 			case 3: //Skeleton
 		
+				strcpy(EnemyName, "Skeleton");
 				EnemyAttack = D6 + 2;
 				break;
 				
 			case 4: //EvilWarrior
-		
+				
+				strcpy(EnemyName, "Evil Warrior");
 				EnemyAttack = D6 + 3;
 				break;
 			
 			case 5: //DevilBat
 		
+				strcpy(EnemyName, "Devil Bat");
 				EnemyAttack = D6 + 4;
 				break;
 				
 			case 6: //Cyclops
-		
+				
+				strcpy(EnemyName, "Cyclops");
 				EnemyAttack = D6 + 5;
 				break;
 				
 			case 7: //Dark Elf
-		
+				
+				strcpy(EnemyName, "Dark Elf");
 				EnemyAttack = D6 + 6;
 				break;
 				
 			case 8: //Skeleton Lord
 		
+				strcpy(EnemyName, "Skeleton Lord");
 				EnemyAttack = D6 + 7;
 				break;
 				
 			case 9: //Wizard
 		
+				strcpy(EnemyName, "Wizard");
 				EnemyAttack = D6 + 8;
 				break;
 				
 			case 10: //Demon
-		
+				
+				strcpy(EnemyName, "Demon");
 				EnemyAttack = D6 + 9;
 				break;
 				
 			case 11: //BBEG
 		
+				strcpy(EnemyName, "BBEG");
 				EnemyAttack = D6 + 10;
 				break;
 		
 		}
 		
-		printf ("Enemy: *** [D6 +%d]\n", (EnemyNumber - 1));
+		printf ("Enemy: %s [D6 +%d]\n", EnemyName, (EnemyNumber - 1));
 		printf ("Enemy Attack Pts = %d \n\n", EnemyAttack);
 		
 		//scanf("Add number to continue:", &Option);
@@ -511,16 +524,36 @@ void RollEvent() {
 		case 1:
 		
 			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 2) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 3) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 4) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 5) {EnemyNumber = 2; Battle();}
+			if (TowerLevel == 6) {EnemyNumber = 3; Battle();}
+			if (TowerLevel == 7) {EnemyNumber = 4; Battle();}
+			if (TowerLevel == 8) {EnemyNumber = 5; Battle();}
+			if (TowerLevel == 9) {EnemyNumber = 6; Battle();}
+			if (TowerLevel == 10) {EnemyNumber = 7; Battle();}
+			
 			break;
 			
 		case 2:
 		
 			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 2) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 3) {EnemyNumber = 2; Battle();}
+			if (TowerLevel == 4) {EnemyNumber = 2; Battle();}
+			if (TowerLevel == 5) {EnemyNumber = 3; Battle();}
+			if (TowerLevel == 6) {EnemyNumber = 4; Battle();}
+			if (TowerLevel == 7) {EnemyNumber = 5; Battle();}
+			if (TowerLevel == 8) {EnemyNumber = 6; Battle();}
+			if (TowerLevel == 9) {EnemyNumber = 7; Battle();}
+			if (TowerLevel == 10) {EnemyNumber = 8; Battle();}
+
 			break;
 				
 		case 3:
 		
-			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 1 || TowerLevel == 2) {EnemyNumber = 1; Battle();}
 			break;
 		
 		case 4:		
