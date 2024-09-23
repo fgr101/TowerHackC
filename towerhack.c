@@ -29,6 +29,7 @@ int EnemyID;
 
 int D6;
 int EnemyNumber;
+int EnemyHITPoints;
 int EnemyAttack;
 int EndBattle;
 
@@ -317,6 +318,76 @@ void Battle(){
 	
 	ClearScreen();
 	
+	switch (EnemyNumber) {
+			
+		case 1: //Orc
+				
+			strcpy(EnemyName, "Orc");
+			EnemyHITPoints = 0;
+			break;
+				
+		case 2: //Wolf
+			
+			strcpy(EnemyName, "Wolf");
+			EnemyHITPoints = 1;
+			break;
+			
+		case 3: //Skeleton
+		
+			strcpy(EnemyName, "Skeleton");
+			EnemyHITPoints = 2;
+			break;
+				
+		case 4: //EvilWarrior
+				
+			strcpy(EnemyName, "Evil Warrior");
+			EnemyHITPoints = 3;
+			break;
+			
+		case 5: //DevilBat
+		
+			strcpy(EnemyName, "Devil Bat");
+			EnemyHITPoints = 4;
+			break;
+				
+		case 6: //Cyclops
+				
+			strcpy(EnemyName, "Cyclops");
+			EnemyHITPoints = 5;
+			break;
+				
+		case 7: //Dark Elf
+				
+			strcpy(EnemyName, "Dark Elf");
+			EnemyHITPoints = 6;
+			break;
+				
+		case 8: //Skeleton Lord
+		
+			strcpy(EnemyName, "Skeleton Lord");
+			EnemyHITPoints = 7;
+			break;
+				
+		case 9: //Wizard
+		
+			strcpy(EnemyName, "Wizard");
+			EnemyHITPoints = 8;
+			break;
+				
+		case 10: //Demon
+				
+			strcpy(EnemyName, "Demon");
+			EnemyHITPoints = 9;
+			break;
+				
+		case 11: //BBEG
+		
+			strcpy(EnemyName, "BBEG");
+			EnemyHITPoints = 10;
+			break;
+		
+	}
+	
 	do {
 		
 		printf ("\n[D6] ENEMY ROLLING D6...\n");
@@ -324,76 +395,8 @@ void Battle(){
 
 		RollD6();
 		PrintD6();
-		
-		switch (EnemyNumber) {
-			
-			case 1: //Orc
 				
-				strcpy(EnemyName, "Orc");
-				EnemyAttack = D6;
-				break;
-				
-			case 2: //Wolf
-				
-				strcpy(EnemyName, "Wolf");
-				EnemyAttack = D6 + 1;
-				break;
-			
-			case 3: //Skeleton
-		
-				strcpy(EnemyName, "Skeleton");
-				EnemyAttack = D6 + 2;
-				break;
-				
-			case 4: //EvilWarrior
-				
-				strcpy(EnemyName, "Evil Warrior");
-				EnemyAttack = D6 + 3;
-				break;
-			
-			case 5: //DevilBat
-		
-				strcpy(EnemyName, "Devil Bat");
-				EnemyAttack = D6 + 4;
-				break;
-				
-			case 6: //Cyclops
-				
-				strcpy(EnemyName, "Cyclops");
-				EnemyAttack = D6 + 5;
-				break;
-				
-			case 7: //Dark Elf
-				
-				strcpy(EnemyName, "Dark Elf");
-				EnemyAttack = D6 + 6;
-				break;
-				
-			case 8: //Skeleton Lord
-		
-				strcpy(EnemyName, "Skeleton Lord");
-				EnemyAttack = D6 + 7;
-				break;
-				
-			case 9: //Wizard
-		
-				strcpy(EnemyName, "Wizard");
-				EnemyAttack = D6 + 8;
-				break;
-				
-			case 10: //Demon
-				
-				strcpy(EnemyName, "Demon");
-				EnemyAttack = D6 + 9;
-				break;
-				
-			case 11: //BBEG
-		
-				strcpy(EnemyName, "BBEG");
-				EnemyAttack = D6 + 10;
-				break;
-		
-		}
+		EnemyAttack = D6 + EnemyHITPoints;
 		
 		printf ("Enemy: %s [D6 +%d]\n", EnemyName, (EnemyNumber - 1));
 		printf ("Enemy Attack Pts = %d \n\n", EnemyAttack);
