@@ -2,10 +2,15 @@
 #include <stdlib.h> // Contains the rand() function.
 #include <time.h> // Time and random functions.
 #include <string.h> // library for strings
-#include <windows.h> // for BEEPS, sleep, and windows functionalities.
 
 #ifdef _WIN32
-#include <windows.h> // Required for Sleep() on Windows 
+
+	#include <windows.h>    // Required for Sleep() on Windows, for BEEPS, 
+						   //sleep, and windows functionalities.
+#else	
+	
+	#include <unistd.h> //Required for LINUX commands and unix-like systems
+					    
 #endif
 
 void ClearScreen();
@@ -16,6 +21,7 @@ void Battle();
 void PrintD6();
 void RollEvent();
 void UsePotion();
+void Sleep();
 
 void EmptyRoom();
 void PotionFound();
@@ -164,7 +170,7 @@ int main () {
 			
 			printf("\n\n");
 						
-			Sleep(1000);
+			Sleep();
 			RollEvent();
 		
 		}
@@ -314,12 +320,16 @@ void Battle(){
 	
 	printf("\nBattle! You found an enemy!\n");
 		
-	Sleep(1000);
+	Sleep();
 	
 	ClearScreen();
 	
 	switch (EnemyNumber) {
 			
+		
+		// 1 Orc | 2 Wolf | 3 Skeleton | 4 Evil Warrior | 5 Devil Bat
+		// 6 Cyclops | 7 Dark Elf | 8 Skeleton Lord | 9 Wizard | 10 Demon
+		
 		case 1: //Orc
 				
 			strcpy(EnemyName, "Orc");
@@ -391,7 +401,7 @@ void Battle(){
 	do {
 		
 		printf ("\n[D6] ENEMY ROLLING D6...\n");
-		Sleep(1000);
+		Sleep();
 
 		RollD6();
 		PrintD6();
@@ -404,7 +414,7 @@ void Battle(){
 		//scanf("Add number to continue:", &Option);
 				
 		printf ("[D6] PLAYER ROLLING D6...\n");
-		Sleep(1000);
+		Sleep();
 		
 		RollD6();
 		PrintD6();
@@ -423,23 +433,31 @@ void Battle(){
 			XPCounter ++;
 			if (XPCounter == 3) {XP++; XPCounter = 0;}
 			EndBattle = 1;
-			Sleep(1000);
+			Sleep();
 				
 		} else {
 			
 				printf("The ENEMY HITS YOU!\n"); PlayerHP --;
-				if (PlayerHP <= 0) {GameOver(); return;}
+				if (PlayerHP <= 0) {GameOver();}
 		
 			}
 		
 		//scanf("Add number 1 to continue:", &Option);
-		Sleep(1000);
+		Sleep();
 			
 	} while (EndBattle != 1);
 }
 
 //Sounds
-void SoundA(){Beep(700, 350);}
+void SoundA(){
+	
+	#ifdef _WIN32
+    	
+		Beep(700, 350);
+		
+	#endif
+	
+}
 
 void PrintD6() {
 	
@@ -517,12 +535,15 @@ void PrintD6() {
 void RollEvent() {
 	
 	printf ("[D6] ROLLING EVENT...\n");
-	Sleep(1000);
+	Sleep();
 	RollD6();
 	PrintD6();
-	Sleep(1000);
+	Sleep();
 	
 	switch (D6) {
+		
+		// 1 Orc | 2 Wolf | 3 Skeleton | 4 Evil Warrior | 5 Devil Bat
+		// 6 Cyclops | 7 Dark Elf | 8 Skeleton Lord | 9 Wizard | 10 Demon
 		
 		case 1:
 		
@@ -556,12 +577,35 @@ void RollEvent() {
 				
 		case 3:
 		
-			if (TowerLevel == 1 || TowerLevel == 2) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 1) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 2) {EnemyNumber = 1; Battle();}
+			if (TowerLevel == 3) {EnemyNumber = 3; Battle();}
+			if (TowerLevel == 4) {EnemyNumber = 3; Battle();}
+			if (TowerLevel == 5) {EnemyNumber = 4; Battle();}
+			if (TowerLevel == 6) {EnemyNumber = 5; Battle();}
+			if (TowerLevel == 7) {EnemyNumber = 6; Battle();}
+			if (TowerLevel == 8) {EnemyNumber = 7; Battle();}
+			if (TowerLevel == 9) {EnemyNumber = 8; Battle();}
+			if (TowerLevel == 10) {EnemyNumber = 9; Battle();}
+						
 			break;
 		
-		case 4:		
+		// 1 Orc | 2 Wolf | 3 Skeleton | 4 Evil Warrior | 5 Devil Bat
+		// 6 Cyclops | 7 Dark Elf | 8 Skeleton Lord | 9 Wizard | 10 Demon
 		
-			if (TowerLevel == 1 || TowerLevel == 3) {PotionFound();}
+		case 4:		
+			
+			if (TowerLevel == 1) {PotionFound();}
+			if (TowerLevel == 2) {EnemyNumber = 2; Battle();}
+			if (TowerLevel == 3) {PotionFound();}
+			if (TowerLevel == 4) {EnemyNumber = 4; Battle();}
+			if (TowerLevel == 5) {EnemyNumber = 5; Battle();}
+			if (TowerLevel == 6) {EnemyNumber = 6; Battle();}
+			if (TowerLevel == 7) {EnemyNumber = 7; Battle();}
+			if (TowerLevel == 8) {EnemyNumber = 8; Battle();}
+			if (TowerLevel == 9) {EnemyNumber = 9; Battle();}
+			if (TowerLevel == 10) {EnemyNumber = 10; Battle();}
+			
 			break;
 		
 		case 5:
@@ -569,6 +613,7 @@ void RollEvent() {
 			if (TowerLevel == 1 || TowerLevel == 2 || TowerLevel == 3 || TowerLevel == 4) {EmptyRoom(); }
 			if (TowerLevel == 5  || TowerLevel == 7 || TowerLevel == 8 || TowerLevel == 10) {EmptyRoom(); }
 			if (TowerLevel == 6 || TowerLevel == 9) {PotionFound();}
+			
 			break;
 		
 		case 6:
@@ -582,14 +627,21 @@ void RollEvent() {
 
 void GameOver() {
 
+		printf ("You've been killed by a %s.\n", EnemyName);
+		printf ("You got up to floor %d.\n", TowerLevel); 
+		
 		printf("\n GAME OVER \n");
+		
+		Sleep();
+		
+		return;
 	
 }
 
 void EmptyRoom() {
 	
 	printf ("The room is empty.\n");
-	Sleep(1000);
+	Sleep();
 	
 }
 
@@ -597,7 +649,7 @@ void PotionFound() {
 	
 	printf("You have found a potion!\n");
 	Potions++;
-	Sleep(1000);
+	Sleep();
 	
 }
 
@@ -618,7 +670,7 @@ void UsePotion() {
 		
 	}
 	
-	Sleep(1000);
+	Sleep();
 
 }
 
@@ -639,6 +691,20 @@ void GetXP() {
 		
 		}
 			
-	Sleep(1000);
+	Sleep();
 				
+}
+
+void Sleep() {
+	
+	#ifdef _WIN32 //For Windows
+    
+		Sleep(1000);
+	
+	#else //For Linux
+    
+		sleep(1);
+				
+	#endif
+	
 }
