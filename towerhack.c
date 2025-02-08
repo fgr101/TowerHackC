@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 
-	#include <windows.h>    // Required for Sleep() on Windows, for BEEPS, 
+	#include <windows.h>    // Required for CustomSleep() on Windows, for BEEPS, 
 						   //sleep, and windows functionalities.
 #else	
 	
@@ -21,7 +21,7 @@ void Battle();
 void PrintD6();
 void RollEvent();
 void UsePotion();
-void Sleep();
+void CustomSleep();
 
 void EmptyRoom();
 void PotionFound();
@@ -48,6 +48,10 @@ int TowerLevel = 1;
 int Coordinates = 0;
 int YPosition = 1;
 int XPosition = 1;
+
+//Switchs
+
+int SkipEvent = 0;
 
 int f;
 int i;
@@ -79,7 +83,8 @@ int main () {
 	
 	do {
 
-		ClearScreen();		
+		ClearScreen();
+			
 		if (PlayerHP <= 0) {return 0;}
 
 		DrawMap();
@@ -101,26 +106,33 @@ int main () {
 					
 				case 3:
 				
-					if (XPosition == Stairs[TowerLevel]) {
+					if (XPosition == Stairs[TowerLevel- 1]) {
 						
 						TowerLevel ++;
 						SoundA();
 					
+					} else {
+						
+						SkipEvent = 1;
+						break;
+												
 					}
 					
-					break;
-				
 				case 4:
 					
-					if (XPosition == Stairs[TowerLevel - 1]) {
+					if (XPosition == Stairs[TowerLevel - 2]) {
 						
 						TowerLevel --;
 						SoundA(); 
+						break;
 					
+					} else {
+						
+						SkipEvent = 1;
+						break;
+												
 					}
-				
-					break;
-					
+			
 				case 7: 
 				
 					return 0;
@@ -133,8 +145,20 @@ int main () {
 					
 			}
 			
-		if (XPosition == 0) { XPosition = 1;}
-		if (XPosition == 7) { XPosition = 6;}
+		if (XPosition == 0) { 
+			
+			SkipEvent = 1;
+			XPosition = 1;
+			
+		}
+					
+		if (XPosition == 7) { 
+			
+			SkipEvent = 1;
+			XPosition = 6;
+			
+		}
+		
 		if (TowerLevel == 0) { TowerLevel = 1;}
 		if (TowerLevel == 11) { TowerLevel = 10;}
 		
@@ -147,34 +171,71 @@ int main () {
 			switch(Coordinates) {
 				
 				case 1:
-
-					printf("Going east...");
+					
+					if (XPosition == 1 & SkipEvent == 1) { //ARREGLAR BUG
+						
+						printf("It's not possible to go left! There's the wall!!");						
+						break;
+						
+					} else {
+						
+						printf("Going west...");
+												
+						}
+						
 					break;
 				
 				case 2:
-					
-					printf("Going west...");
-					break;
+				
+					if (XPosition == 6 & SkipEvent == 1) { //ARREGLAR BUG
+						
+						printf("It's not possible to go right! There's the wall!!");						
+						break;
+						
+					} else {
+						
+						printf("Going east...");
+						break;
+												
+					}
 				
 				case 3:
 					
-					printf("Going upstairs...");
-					break;
-				
-				case 4:
+					if (XPosition == Stairs[TowerLevel - 1] & SkipEvent == 0) { // RESOLVER ESTO
+
+						printf("Going upstairs...");
+						break;
 					
-					printf("Going downstairs...");
-					break;
-				
+					} else {
+
+						printf("Imposible to go up without a stair!");
+						break;					
+
+					}
+					
+				case 4:
+
+					if (XPosition == Stairs[TowerLevel - 2]) { //RESOLVER ESTO
+						
+						printf("Going downstairs...");
+						break;
+					
+					} else {
+						
+						printf("Imposible to go down without a stair!");
+						break;
+					
+					}
+					
 			}
 			
 			printf("\n\n");
-						
-			Sleep();
+			CustomSleep();
 			RollEvent();
-		
+					
 		}
-									
+		
+
 	} while (Coordinates != 7);
 	
 	return 0;
@@ -320,7 +381,7 @@ void Battle(){
 	
 	printf("\nBattle! You found an enemy!\n");
 		
-	Sleep();
+	CustomSleep();
 	
 	ClearScreen();
 	
@@ -401,7 +462,7 @@ void Battle(){
 	do {
 		
 		printf ("\n[D6] ENEMY ROLLING D6...\n");
-		Sleep();
+		CustomSleep();
 
 		RollD6();
 		PrintD6();
@@ -414,7 +475,7 @@ void Battle(){
 		//scanf("Add number to continue:", &Option);
 				
 		printf ("[D6] PLAYER ROLLING D6...\n");
-		Sleep();
+		CustomSleep();
 		
 		RollD6();
 		PrintD6();
@@ -433,7 +494,7 @@ void Battle(){
 			XPCounter ++;
 			if (XPCounter == 3) {XP++; XPCounter = 0;}
 			EndBattle = 1;
-			Sleep();
+			CustomSleep();
 				
 		} else {
 			
@@ -443,7 +504,8 @@ void Battle(){
 			}
 		
 		//scanf("Add number 1 to continue:", &Option);
-		Sleep();
+		
+		CustomSleep();
 			
 	} while (EndBattle != 1);
 }
@@ -534,12 +596,20 @@ void PrintD6() {
 
 void RollEvent() {
 	
-	printf ("[D6] ROLLING EVENT...\n");
-	Sleep();
-	RollD6();
-	PrintD6();
-	Sleep();
-	
+	if (SkipEvent == 1) {
+		
+		D6 = 7;
+		
+	} else {
+		
+		printf ("[D6] ROLLING EVENT...\n");
+		CustomSleep();
+		RollD6();
+		PrintD6();
+		CustomSleep(); 
+		
+		}
+		
 	switch (D6) {
 		
 		// 1 Orc | 2 Wolf | 3 Skeleton | 4 Evil Warrior | 5 Devil Bat
@@ -620,6 +690,11 @@ void RollEvent() {
 		
 			GetXP();
 			break;
+			
+		case 7: 
+			
+			SkipEvent = 0;
+			break;
 	
 	}
 
@@ -632,7 +707,7 @@ void GameOver() {
 		
 		printf("\n GAME OVER \n");
 		
-		Sleep();
+		CustomSleep();
 		
 		return;
 	
@@ -641,7 +716,7 @@ void GameOver() {
 void EmptyRoom() {
 	
 	printf ("The room is empty.\n");
-	Sleep();
+	CustomSleep();
 	
 }
 
@@ -649,7 +724,7 @@ void PotionFound() {
 	
 	printf("You have found a potion!\n");
 	Potions++;
-	Sleep();
+	CustomSleep();
 	
 }
 
@@ -670,7 +745,7 @@ void UsePotion() {
 		
 	}
 	
-	Sleep();
+	CustomSleep();
 
 }
 
@@ -691,11 +766,11 @@ void GetXP() {
 		
 		}
 			
-	Sleep();
+	CustomSleep();
 				
 }
 
-void Sleep() {
+void CustomSleep() {
 	
 	#ifdef _WIN32 //For Windows
     
@@ -708,3 +783,23 @@ void Sleep() {
 	#endif
 	
 }
+
+
+//======================================================================
+
+//NOTES:
+
+// Things to do:
+// ====== == ==
+
+// - Not to be able to move up if there isn’t a ladder.
+// - Make a GAME OVER message when your character dies!
+// - Add a second ladder in each of the stories.
+
+// DONE
+// ====
+
+// - If you are next to the wall and want to go right “YOU CANNOT GO THAT 
+//   WAY!”, the same happens when you want to move to the left and there’s a wall.
+
+
